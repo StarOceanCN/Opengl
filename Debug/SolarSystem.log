@@ -1,0 +1,6 @@
+﻿  SolarSystem.cpp
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(38): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(39): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(183): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+  SolarSystem.vcxproj -> C:\Users\Mr.D\Documents\Visual Studio 2015\Projects\opengl\Debug\SolarSystem.exe
+  SolarSystem.vcxproj -> C:\Users\Mr.D\Documents\Visual Studio 2015\Projects\opengl\Debug\SolarSystem.pdb (Partial PDB)

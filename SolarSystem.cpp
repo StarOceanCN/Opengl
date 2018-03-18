@@ -10,6 +10,7 @@ using namespace std;
 
 #include"Camera.h"
 #include"Shader.h"
+#include"Model.h"
 #include<SOIL.h>
 
 #include<glm\glm.hpp>
@@ -24,6 +25,8 @@ GLfloat lastTime = 0.0f;
 Camera SolarSystemCamera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool keys[1024];
 GLfloat deltaTime;
+glm::vec3 LightPos(1.2f, 1.0f, 2.0f);
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {//参数顺序不可打乱
 	if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS)glfwSetWindowShouldClose(window, GL_TRUE);
 	if (action == GLFW_PRESS) { keys[key] = true; }
@@ -178,6 +181,10 @@ int main() {
 
 	Shader UniverseBoxShader;
 	UniverseBoxShader.fileShader("UniverseBox/U_Sader.vt","UniverseBox/U_Sader.fg");
+	
+	Model Earth("SolarAndPlanet/Earth/Earth.obj");
+	Shader EarthShader;
+	EarthShader.fileShader("SolarAndPlanet/Earth/Earth.vt", "SolarAndPlanet/Earth/Earth.fg");
 
 	while (!glfwWindowShouldClose(window)) {
 		GLfloat currentFrame = glfwGetTime();
@@ -189,14 +196,14 @@ int main() {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glm::mat4 view, projection;
-		view = SolarSystemCamera.GetViewMatrix();
+		glm::mat4 Boxview, projection;
+		Boxview = SolarSystemCamera.GetViewMatrix();
 		projection = glm::perspective(SolarSystemCamera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 
 		glDepthFunc(GL_LEQUAL);
 		UniverseBoxShader.Use();
-		view = glm::mat4(glm::mat3(SolarSystemCamera.GetViewMatrix()));
-		glUniformMatrix4fv(glGetUniformLocation(UniverseBoxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		Boxview = glm::mat4(glm::mat3(SolarSystemCamera.GetViewMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(UniverseBoxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(Boxview));
 		glUniformMatrix4fv(glGetUniformLocation(UniverseBoxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 		glBindVertexArray(UbVAO);
@@ -206,6 +213,28 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);
+
+		LightPos.x = glm::sin(glfwGetTime()*0.3f);
+		LightPos.y = glm::cos(glfwGetTime()*0.6f);
+
+		EarthShader.Use();  
+		glUniform3f(glGetUniformLocation(EarthShader.Program, "light.position"), LightPos.x, LightPos.y, LightPos.z);
+		glUniform3f(glGetUniformLocation(EarthShader.Program, "light.ambient"), 0.2f, 0.2f, 0.2f);
+		glUniform3f(glGetUniformLocation(EarthShader.Program, "light.diffuse"), 0.5f, 0.5f, 0.5f);
+		glUniform3f(glGetUniformLocation(EarthShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(EarthShader.Program, "material.shininess"), 32.0f);
+		glUniform3f(glGetUniformLocation(EarthShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+
+		glm::mat4 view = SolarSystemCamera.GetViewMatrix();
+		glUniformMatrix4fv(glGetUniformLocation(EarthShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(EarthShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+
+		glm::mat4 model;
+		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); 
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	
+		glUniformMatrix4fv(glGetUniformLocation(EarthShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		Earth.ModelRender(EarthShader);
 
 		glfwSwapBuffers(window);
 	}

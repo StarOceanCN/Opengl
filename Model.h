@@ -79,13 +79,13 @@ private:
 					break;
 				}
 			}
-			if (!skip) {   // 如果纹理没有被加载过，加载之
+			if (!skip) { 
 				Texture texture;
 				texture.Texid = TextureFromFile(aistr.C_Str(), this->directory);
 				texture.Textype = texname;
 				texture.path = aistr;
 				textures.push_back(texture);
-				this->textures_loaded.push_back(texture);  // 添加到纹理列表 textures
+				this->textures_loaded.push_back(texture); 
 			}
 		}
 		return textures;

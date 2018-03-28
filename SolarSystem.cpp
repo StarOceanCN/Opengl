@@ -29,7 +29,7 @@ GLfloat lastTime = 0.0f;
 Camera SolarSystemCamera(glm::vec3(0.0f, 0.0f, 30.0f));
 bool keys[1024];
 GLfloat deltaTime;
-glm::vec3 LightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 LightPos(50.0f, 30.0f, 40.0f);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {//参数顺序不可打乱
 	if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS)glfwSetWindowShouldClose(window, GL_TRUE);
@@ -120,47 +120,47 @@ int main() {
 	glDepthFunc(GL_LESS);
 	GLfloat UniverseBox[] = {
 		// Positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
+		-50.0f,  50.0f, -50.0f,
+		-50.0f, -50.0f, -50.0f,
+		50.0f, -50.0f, -50.0f,
+		50.0f, -50.0f, -50.0f,
+		50.0f,  50.0f, -50.0f,
+		-50.0f,  50.0f, -50.0f,
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
+		-50.0f, -50.0f,  50.0f,
+		-50.0f, -50.0f, -50.0f,
+		-50.0f,  50.0f, -50.0f,
+		-50.0f,  50.0f, -50.0f,
+		-50.0f,  50.0f,  50.0f,
+		-50.0f, -50.0f,  50.0f,
 
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
+		50.0f, -50.0f, -50.0f,
+		50.0f, -50.0f,  50.0f,
+		50.0f,  50.0f,  50.0f,
+		50.0f,  50.0f,  50.0f,
+		50.0f,  50.0f, -50.0f,
+		50.0f, -50.0f, -50.0f,
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
+		-50.0f, -50.0f,  50.0f,
+		-50.0f,  50.0f,  50.0f,
+		50.0f,  50.0f,  50.0f,
+		50.0f,  50.0f,  50.0f,
+		50.0f, -50.0f,  50.0f,
+		-50.0f, -50.0f,  50.0f,
 
-		-1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
+		-50.0f,  50.0f, -50.0f,
+		50.0f,  50.0f, -50.0f,
+		50.0f,  50.0f,  50.0f,
+		50.0f,  50.0f,  50.0f,
+		-50.0f,  50.0f,  50.0f,
+		-50.0f,  50.0f, -50.0f,
 
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		1.0f, -1.0f,  1.0f
+		-50.0f, -50.0f, -50.0f,
+		-50.0f, -50.0f,  50.0f,
+		50.0f, -50.0f, -50.0f,
+		50.0f, -50.0f, -50.0f,
+		-50.0f, -50.0f,  50.0f,
+		50.0f, -50.0f,  50.0f
 	};
 	GLuint UbVAO, UbVBO;
 	glGenVertexArrays(1, &UbVAO);
@@ -187,6 +187,7 @@ int main() {
 	UniverseBoxShader.fileShader("UniverseBox/U_Sader.vt","UniverseBox/U_Sader.fg");
 	Shader PlanetShader;
 	PlanetShader.fileShader("SolarAndPlanet/Shader/PlanetShader.vt", "SolarAndPlanet/Shader/PlanetShader.fg");
+	Model Mercury("SolarAndPlanet/Mercury/Mercury.obj");
 	
 	Model Earth("SolarAndPlanet/Earth/Earth.obj");
 	//Shader EarthShader;
@@ -195,12 +196,12 @@ int main() {
 	Model Venus("SolarAndPlanet/Venus/Venus.obj");
 	//Shader VenusShader;
 	//VenusShader.fileShader("SolarAndPlanet/Shader/PlanetShader.vt", "SolarAndPlanet/Shader/PlanetShader.fg");
-
+/*
 	Model Mars("SolarAndPlanet/Mars/Mars.obj");
 	//Shader MarsShader;
 	//MarsShader.fileShader("SolarAndPlanet/Shader/PlanetShader.vt", "SolarAndPlanet/Shader/PlanetShader.fg");
 
-	Model Mercury("SolarAndPlanet/Mercury/Mercury.obj");
+	
 	//Shader MercuryShader;
 	//MercuryShader.fileShader("SolarAndPlanet/Shader/PlanetShader.vt", "SolarAndPlanet/Shader/PlanetShader.fg");
 
@@ -219,6 +220,7 @@ int main() {
 	Model Sun("SolarAndPlanet/Sun/Sun.obj");
 
 	Model Moon("SolarAndPlanet/Earth/Moon.obj");
+	*/
 
 	while (!glfwWindowShouldClose(window)) {
 		GLfloat currentFrame = glfwGetTime();
@@ -227,12 +229,13 @@ int main() {
 
 		glfwPollEvents();
 		cameraMove();
+		GLfloat angle = 0.0f;
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glm::mat4 Boxview, projection;
 		Boxview = SolarSystemCamera.GetViewMatrix();
-		projection = glm::perspective(SolarSystemCamera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+		projection = glm::perspective(SolarSystemCamera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 1000.0f);
 
 		glDepthFunc(GL_LEQUAL);
 		UniverseBoxShader.Use();
@@ -248,10 +251,12 @@ int main() {
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);
 
-		LightPos.x = glm::sin(glfwGetTime()*0.3f);
-		LightPos.y = glm::cos(glfwGetTime()*0.6f);
+		LightPos.x = glm::sin(glfwGetTime()*3.0f);
+		LightPos.y = glm::cos(glfwGetTime()*6.0f);
 
 		PlanetShader.Use();  
+		//glUniform1f(glGetUniformLocation(PlanetShader.Program,"ppr.radius"),50.80f);
+		//glUniform1f(glGetUniformLocation(PlanetShader.Program, "ppr.RevolutionSpeed"), 0.01f);
 		glUniform3f(glGetUniformLocation(PlanetShader.Program, "light.position"), LightPos.x, LightPos.y, LightPos.z);
 		glUniform3f(glGetUniformLocation(PlanetShader.Program, "light.ambient"), 0.2f, 0.2f, 0.2f);
 		glUniform3f(glGetUniformLocation(PlanetShader.Program, "light.diffuse"), 0.5f, 0.5f, 0.5f);
@@ -264,48 +269,52 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
 		glm::mat4 model;
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		Sun.ModelRender(PlanetShader);
+		//glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(13.0f))));
+		//Sun.ModelRender(PlanetShader);
 		
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glm::mat4 MercuryModel;
+		MercuryModel = glm::scale(MercuryModel, glm::vec3(0.6f));
+		MercuryModel = glm::translate(MercuryModel,glm::vec3(50.80f*glm::sin(glfwGetTime()*0.1f),0.0f, 50.80f*glm::cos(glfwGetTime()*0.1f)));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(MercuryModel));
 		Mercury.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glm::mat4 VenusModel;
+		VenusModel = glm::scale(model, glm::vec3(0.85f));
+		VenusModel = glm::translate(VenusModel, glm::vec3(60.80f*glm::sin(glfwGetTime()), 0.0f, 60.80f*glm::cos(glfwGetTime())));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(VenusModel));
 		Venus.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		/*
+		model = glm::translate(model, glm::vec3(15.00f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(1.0f))));
 	
 		Earth.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::translate(model, glm::vec3(3.1f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(0.1f))));
 		Moon.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::translate(model, glm::vec3(22.80f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(0.5f))));
 		Mars.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::translate(model, glm::vec3(77.80f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(1.403f))));
 		Jupiter.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::translate(model, glm::vec3(142.70f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(3.46f))));
 		Saturn.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::translate(model, glm::vec3(287.00f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(2.9f))));
 		Uranus.ModelRender(PlanetShader);
 
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::translate(model, glm::vec3(450.00f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(PlanetShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(2.2f))));
 	
 		Neptune.ModelRender(PlanetShader);
-
+		*/
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();

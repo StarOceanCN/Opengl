@@ -1,0 +1,18 @@
+#version 330 core
+layout (lines) in;
+layout (triangle_strip, max_vertices = 160) out;
+
+void main() {
+	float r=5.0f;
+	float angle=0.0f;
+	int i=0;
+	for(i=0;i<80;i++){
+		gl_Position = gl_in[0].gl_Position + vec4(r*cos(angle),0.0f,r*sin(angle),0.0f);
+    	EmitVertex();
+		gl_Position = gl_in[1].gl_Position + vec4(r*cos(angle),0.0f,r*sin(angle),0.0f);
+    	EmitVertex();
+		
+		angle+=0.08f;
+	}
+	EndPrimitive();
+}

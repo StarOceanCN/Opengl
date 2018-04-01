@@ -1,8 +1,8 @@
 ﻿  SolarSystem.cpp
 c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\model.h(54): warning C4101: “index”: 未引用的局部变量
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(46): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(47): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(243): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(43): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(44): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(242): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
 c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\model.h(68): warning C4715: “Model::TransferMesh”: 不是所有的控件路径都返回值
   SolarSystem.vcxproj -> C:\Users\Mr.D\Documents\Visual Studio 2015\Projects\opengl\Debug\SolarSystem.exe
   SolarSystem.vcxproj -> C:\Users\Mr.D\Documents\Visual Studio 2015\Projects\opengl\Debug\SolarSystem.pdb (Partial PDB)

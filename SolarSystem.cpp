@@ -17,10 +17,6 @@ using namespace std;
 #include<glm\gtc\matrix_transform.hpp>
 
 #include"Planet.h"
-template<class T>
-int Length(T& array) {
-	return (sizeof(array) / sizeof(array[0]));
-}
 
 GLuint WIDTH = 1000, HEIGHT = 700;
 bool isFirst = true;
@@ -31,12 +27,13 @@ Camera SolarSystemCamera(glm::vec3(0.0f, 0.0f, 30.0f));
 bool keys[1024];
 GLfloat deltaTime;
 glm::vec3 LightPos(50.0f, 30.0f, 40.0f);
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {//参数顺序不可打乱
+//键盘回调函数，参数顺序不可打乱
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS)glfwSetWindowShouldClose(window, GL_TRUE);
 	if (action == GLFW_PRESS) { keys[key] = true; }
 	else if (action == GLFW_RELEASE)keys[key] = false;
 }
+//鼠标回调函数，用于摄像机镜头的旋转
 void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 	if (isFirst) {
 		LastxPos = xPos;
@@ -55,6 +52,8 @@ void cameraMove() {
 	if (keys[GLFW_KEY_A])SolarSystemCamera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys[GLFW_KEY_D])SolarSystemCamera.ProcessKeyboard(RIGHT, deltaTime);
 }
+//纹理加载函数
+/*
 GLuint loadTex(GLchar* path) {
 	GLuint TexID;
 	glGenTextures(1, &TexID);
@@ -73,6 +72,8 @@ GLuint loadTex(GLchar* path) {
 	SOIL_free_image_data(image);
 	return TexID;
 }
+*/
+//天空盒加载函数
 GLuint loadBox(vector<const char*> faces) {
 	GLuint TexID;
 	glGenTextures(1, &TexID);
@@ -114,12 +115,12 @@ int main() {
 		std::cout << "Failed to initizlize GLEW" << std::endl;
 		return -1;
 	}
-
-
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+
+
 	GLfloat UniverseBox[] = {
 		// Positions          
 		-50.0f,  50.0f, -50.0f,
@@ -187,21 +188,19 @@ int main() {
 
 	Shader UniverseBoxShader;
 	UniverseBoxShader.fileShader("UniverseBox/U_Sader.vt","UniverseBox/U_Sader.fg");
+//行星模型初始化
+	Sun sun(13.0f);
+	sun.ReadShaderAndModel("SolarAndPlanet/Shader/SunShader.vt","SolarAndPlanet/Shader/SunShader.fg","SolarAndPlanet/Sun/Sun.obj");
+	
+	Planet Mercury(1.0f, 70.0f,0.5f);
+	Mercury.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+		"SolarAndPlanet/Mercury/Mercury.obj");
 
-	Planet Sun(1.5f,20.0f,1.0f);
-	Sun.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt","SolarAndPlanet/Shader/PlanetShader.fg","SolarAndPlanet/Sun/Sun.obj");
-	/*	
-	Planet Venus(1.0f, 0.0f);
+/*	Planet Venus(1.0f, 50.0f,0.5f);
 	Venus.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
 		"SolarAndPlanet/Shader/PlanetShader.fg",
 		"SolarAndPlanet/Venus/Venus.obj");
-
-	Planet Mercury(1.0f, 0.0f);
-	Mercury.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
-		"SolarAndPlanet/Mercury/Mercury.obj");
-
-
 
 	Planet Earth(1.0f, 0.0f);
 	Earth.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
@@ -271,46 +270,36 @@ int main() {
 		glm::mat4 model;
 		model = glm::scale(model, glm::vec3(13.0f));
 
-		Sun.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Sun.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
-		Sun.RenderPlanet();
-		Sun.RenderOrbit();
-/*
-		Mercury.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Mercury.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		sun.GetMatix(SolarSystemCamera.GetViewMatrix(), projection,glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		sun.RenderPlanet();
+		//Sun.RenderOrbit();
+
+		Mercury.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Mercury.RenderPlanet();
 
-
-		Venus.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Venus.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+/*
+		Venus.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Venus.RenderPlanet();
 
-		Earth.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Earth.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Earth.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Earth.RenderPlanet();
 
-		Moon.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Moon.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Moon.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Moon.RenderPlanet();
 
-		Mars.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Mars.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Mars.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Mars.RenderPlanet();
 
-		Jupiter.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Jupiter.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Jupiter.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Jupiter.RenderPlanet();
 
-		Neptune.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Neptune.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Neptune.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Neptune.RenderPlanet();
 
-		Uranus.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Uranus.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Uranus.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Uranus.RenderPlanet();
 
-		Saturn.GetMatix(SolarSystemCamera.GetViewMatrix(), projection);
-		glUniform3f(glGetUniformLocation(Saturn.PlanetShader.Program, "viewPos"), SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z);
+		Saturn.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Saturn.RenderPlanet();
 */
 

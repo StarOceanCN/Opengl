@@ -30,8 +30,9 @@ void main(){
 	vec3 viewDir=normalize(viewPos-FragPos);
 	//vec3 reflectDir=reflect(-lightDir,normal);
 	vec3 halfwayDir=normalize(lightDir+viewDir);
-	float spec=pow(max(dot(normal,halfwayDir),0.0f),2*material.shininess);
-	vec3 specular=light.specular*spec*vec3(texture(texture_diffuse1,TexCoords));
+	//通过削弱spec值完成镜面反射弱化
+	float spec=pow(max(dot(normal,halfwayDir),0.0f),material.shininess);
+	vec3 specular=0.3f*light.specular*spec*vec3(texture(texture_diffuse1,TexCoords));
 
 	color=vec4(ambient+diffuse+specular,1.0f);
 

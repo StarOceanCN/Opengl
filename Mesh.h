@@ -36,7 +36,7 @@ public:
 		this->textures = textures;
 		this->InitBuffer();
 	};
-	void render(Shader s) {
+	void render(Shader s,GLfloat shininess) {
 		GLuint texturedn = 1;
 		GLuint texturesn = 1;
 		for (GLuint i = 0; i < this->textures.size(); i++) {
@@ -47,7 +47,7 @@ public:
 			glUniform1i(glGetUniformLocation(s.Program, (this->textures[i].Textype + ss.str()).c_str()), i);
 			glBindTexture(GL_TEXTURE_2D, this->textures[i].Texid);
 		}
-		glUniform1f(glGetUniformLocation(s.Program, "material.shininess"), 16.0f);
+		glUniform1f(glGetUniformLocation(s.Program, "material.shininess"), shininess);
 
 		glBindVertexArray(this->VAO);
 		glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);

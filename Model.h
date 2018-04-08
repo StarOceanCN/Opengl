@@ -24,9 +24,9 @@ using namespace Assimp;
 class Model {
 public:
 	Model(string path);
-	void ModelRender(Shader s) {
+	void ModelRender(Shader s,GLfloat shininess) {
 		for (GLuint i = 0; i < this->meshes.size(); i++) {
-			this->meshes[i].render(s);
+			this->meshes[i].render(s,shininess);
 		}
 	};
 	~Model();
@@ -51,7 +51,6 @@ private:
 			else vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 			vertices.push_back(vertex);
 		}
-		GLuint index;
 		for (GLuint i = 0; i < mesh->mNumFaces; i++) {
 			aiFace f = mesh->mFaces[i];
 			for (GLuint j = 0; j < f.mNumIndices; j++)indices.push_back(f.mIndices[j]);

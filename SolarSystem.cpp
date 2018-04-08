@@ -188,53 +188,82 @@ int main() {
 
 	Shader UniverseBoxShader;
 	UniverseBoxShader.fileShader("UniverseBox/U_Sader.vt","UniverseBox/U_Sader.fg");
+/*行星类使用说明：
+*基类（Planet）使用：构造时传入参数顺序为（缩放，轨道半径，公转速度）
+					 使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
+					 使用成员函数SetMatrix参数顺序为（view矩阵，projection矩阵，viewposition视角位置）
+					 渲染使用成员函数RenderPlanet
+
+*Sun类使用：		 构造时传入缩放系数
+					 使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
+					 成员函数SetMatrix传入viewposition视角位置
+					 渲染使用RenderSun函数
+
+*Satellite类使用：	 构造时传入参数顺序为（环绕行星对象，缩放，轨道半径，公转速度）
+					 使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
+					 如果只有一个卫星，请使用成员函数SetMatrix，参数为viewposition
+					 如果有多个卫星（卫星群），请使用SatelliteGroupInit进行初始化
+					 渲染使用SetMatrixAndRender，参数为viewposition视角位置
+*/
 //行星模型初始化
 	Sun sun(13.0f);
 	sun.ReadShaderAndModel("SolarAndPlanet/Shader/SunShader.vt","SolarAndPlanet/Shader/SunShader.fg","SolarAndPlanet/Sun/Sun.obj");
 	
-	Planet Mercury(1.0f, 70.0f,0.5f);
+
+	Planet Jupiter(4.0f, 100.0f,0.3f);
+	Jupiter.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+		"SolarAndPlanet/Jupiter/Jupiter.obj");
+	
+	
+	Satellite SatelliteGroup(Jupiter, 1.0f, 50.0f, 0.5f);
+	SatelliteGroup.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+		"SolarAndPlanet/rock.obj");
+	SatelliteGroup.SatelliteGroupInit(100);
+/*
+	Satellite Moon(Jupiter, 0.5f, 20.0f, 1.5f);
+	Moon.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+		"SolarAndPlanet/Earth/Moon.obj"); 
+
+	Planet Mercury(1.0f, 70.0f,0.0f);
 	Mercury.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
 		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Mercury/Mercury.obj");
 
-/*	Planet Venus(1.0f, 50.0f,0.5f);
+	Planet Venus(1.5f, 80.0f,0.0f);
 	Venus.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Venus/Venus.obj");
 
-	Planet Earth(1.0f, 0.0f);
+	Planet Earth(1.0f,100.0f,0.0f);
 	Earth.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Earth/Earth.obj");
 
-	Planet Moon(1.0f, 0.0f);
-	Moon.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
-		"SolarAndPlanet/Moon/Moon.obj");
+	
 
 	Planet Mars(1.0f, 0.0f);
 	Mars.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Mars/Mars.obj");
 
-	Planet Jupiter(1.0f, 0.0f);
-	Jupiter.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
-		"SolarAndPlanet/Jupiter/Jupiter.obj");
+	
 
 	Planet Neptune(1.0f, 0.0f);
 	Neptune.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Neptune/Neptune.obj");
 
 	Planet Uranus(1.0f, 0.0f);
 	Uranus.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Uranus/Uranus.obj");
 
 	Planet Saturn(1.0f, 0.0f);
 	Saturn.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetShader.fg",
+		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Saturn/Saturn.obj");
 */
 
@@ -267,39 +296,40 @@ int main() {
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);
 
-		glm::mat4 model;
-		model = glm::scale(model, glm::vec3(13.0f));
-
-		sun.GetMatix(SolarSystemCamera.GetViewMatrix(), projection,glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-		sun.RenderPlanet();
+		sun.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection,glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		sun.RenderSun();
 		//Sun.RenderOrbit();
 
-		Mercury.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-		Mercury.RenderPlanet();
-
-/*
-		Venus.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-		Venus.RenderPlanet();
-
-		Earth.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-		Earth.RenderPlanet();
-
-		Moon.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-		Moon.RenderPlanet();
-
-		Mars.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-		Mars.RenderPlanet();
-
-		Jupiter.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Jupiter.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Jupiter.RenderPlanet();
 
-		Neptune.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		SatelliteGroup.SetMatrixAndRender(glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+/*
+
+		Moon.SetMatrix(glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Moon.RenderSatellite();
+		
+		Mercury.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Mercury.RenderPlanet();
+
+		Venus.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Venus.RenderPlanet();
+
+		Earth.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Earth.RenderPlanet();
+
+		
+
+		Mars.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Mars.RenderPlanet();
+
+		Neptune.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Neptune.RenderPlanet();
 
-		Uranus.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Uranus.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Uranus.RenderPlanet();
 
-		Saturn.GetMatix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Saturn.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Saturn.RenderPlanet();
 */
 

@@ -23,7 +23,7 @@ bool isFirst = true;
 double LastxPos = (double)WIDTH / 2.0f;
 double LastyPos = (double)HEIGHT / 2.0f;
 GLfloat lastTime = 0.0f;
-Camera SolarSystemCamera(glm::vec3(0.0f, 0.0f, 30.0f));
+Camera SolarSystemCamera(glm::vec3(0.0f, 0.0f, 100.0f));
 bool keys[1024];
 GLfloat deltaTime;
 glm::vec3 LightPos(50.0f, 30.0f, 40.0f);
@@ -40,11 +40,12 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 		LastyPos = yPos;
 		isFirst = false;
 	}
+	GLfloat MouseSpeed = 0.5f;
 	GLfloat xoffset = xPos - LastxPos;
 	GLfloat yoffset = LastyPos - yPos;
 	LastxPos = xPos;
 	LastyPos = yPos;
-	SolarSystemCamera.ProcessMouseMovement(xoffset, yoffset);
+	SolarSystemCamera.ProcessMouseMovement(MouseSpeed*xoffset, MouseSpeed*yoffset);
 }
 void cameraMove() {
 	if (keys[GLFW_KEY_W])SolarSystemCamera.ProcessKeyboard(FORWARD, deltaTime);
@@ -52,25 +53,47 @@ void cameraMove() {
 	if (keys[GLFW_KEY_A])SolarSystemCamera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys[GLFW_KEY_D])SolarSystemCamera.ProcessKeyboard(RIGHT, deltaTime);
 }
+GLuint generateAttachmentTexture(GLboolean depth,GLboolean stencil) {
+	GLenum attachmenttype;
+	if (!depth && !stencil)
+		attachmenttype = GL_RGB;
+	else if (!depth&&stencil)
+		attachmenttype = GL_STENCIL_INDEX;
+	else if (!stencil&&depth)
+		attachmenttype = GL_DEPTH_COMPONENT;
+
+	GLuint textureId;
+	glGenTextures(1, &textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	if (!depth && !stencil)
+		glTexImage2D(GL_TEXTURE_2D, 0, attachmenttype, WIDTH, HEIGHT, 0, attachmenttype, GL_UNSIGNED_BYTE, NULL);
+	else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return textureId;
+};
 //纹理加载函数
 /*
 GLuint loadTex(GLchar* path) {
-	GLuint TexID;
-	glGenTextures(1, &TexID);
-	int width, height;
-	unsigned char* image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGB);
+GLuint TexID;
+glGenTextures(1, &TexID);
+int width, height;
+unsigned char* image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGB);
 
-	glBindTexture(GL_TEXTURE_2D, TexID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
+glBindTexture(GL_TEXTURE_2D, TexID);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D,0);
-	SOIL_free_image_data(image);
-	return TexID;
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glBindTexture(GL_TEXTURE_2D,0);
+SOIL_free_image_data(image);
+return TexID;
 }
 */
 //天空盒加载函数
@@ -116,13 +139,14 @@ int main() {
 		return -1;
 	}
 	glViewport(0, 0, WIDTH, HEIGHT);
-	glEnable(GL_DEPTH_TEST);
+	//开启深度测试
 	glDepthFunc(GL_LESS);
-	glEnable(GL_PROGRAM_POINT_SIZE);
+	//glEnable(GL_PROGRAM_POINT_SIZE);
+	//开启面剔除优化,默认情况下逆时针为正面，构造矩形需要注意
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
-
-	GLfloat UniverseBox[] = {
-		// Positions          
+	GLfloat UniverseBox[] = {//天空盒顶点数据      
 		-50.0f,  50.0f, -50.0f,
 		-50.0f, -50.0f, -50.0f,
 		50.0f, -50.0f, -50.0f,
@@ -165,17 +189,40 @@ int main() {
 		-50.0f, -50.0f,  50.0f,
 		50.0f, -50.0f,  50.0f
 	};
+	GLfloat frameVertices[] = {
+		-1.0f,0.5f,0.0f,0.0f,
+		-0.5f,1.0f,1.0f,1.0f,
+		-1.0f,1.0f,0.0f,1.0f,
+		
+		-1.0f,0.5f,0.0f,0.0f,
+		-0.5f,0.5f,1.0f,0.0f,
+		-0.5f,1.0f,1.0f,1.0f
+	
+	};
+
+
 	GLuint UbVAO, UbVBO;
 	glGenVertexArrays(1, &UbVAO);
 	glGenBuffers(1, &UbVBO);
 	glBindVertexArray(UbVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, UbVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(UniverseBox), UniverseBox, GL_STATIC_DRAW);
-
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
 	glBindVertexArray(0);
-	
+
+	GLuint frameVAO, frameVBO;
+	glGenVertexArrays(1, &frameVAO);
+	glGenBuffers(1, &frameVBO);
+	glBindVertexArray(frameVAO);
+	glBindBuffer(GL_ARRAY_BUFFER,frameVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(frameVertices), frameVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2*sizeof(GLfloat)));
+	glBindVertexArray(0);
+
 	vector<const GLchar*> faces;
 	faces.push_back("UniverseBox/U_rt.jpg");
 	faces.push_back("UniverseBox/U_lf.jpg");
@@ -186,86 +233,105 @@ int main() {
 	GLuint UniverseBoxTexture = loadBox(faces);
 	faces.clear();
 
+
 	Shader UniverseBoxShader;
-	UniverseBoxShader.fileShader("UniverseBox/U_Sader.vt","UniverseBox/U_Sader.fg");
-/*行星类使用说明：
-*基类（Planet）使用：构造时传入参数顺序为（缩放，轨道半径，公转速度）
-					 使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
-					 使用成员函数SetMatrix参数顺序为（view矩阵，projection矩阵，viewposition视角位置）
-					 渲染使用成员函数RenderPlanet
+	UniverseBoxShader.fileShader("UniverseBox/U_Sader.vt", "UniverseBox/U_Sader.fg");
+	Shader frameBufferShader;
+	frameBufferShader.fileShader("frameBufferShader.vt","frameBufferShader.fg");
 
-*Sun类使用：		 构造时传入缩放系数
-					 使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
-					 成员函数SetMatrix传入viewposition视角位置
-					 渲染使用RenderSun函数
+	/*行星类使用说明：
+	*基类（Planet）使用：构造时传入参数顺序为（缩放，轨道半径，公转速度）
+	使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
+	使用成员函数SetMatrix参数顺序为（view矩阵，projection矩阵，viewposition视角位置）
+	渲染使用成员函数RenderPlanet
 
-*Satellite类使用：	 构造时传入参数顺序为（环绕行星对象，缩放，轨道半径，公转速度）
-					 使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
-					 如果只有一个卫星，请使用成员函数SetMatrix，参数为viewposition
-					 如果有多个卫星（卫星群），请使用SatelliteGroupInit进行初始化
-					 渲染使用SetMatrixAndRender，参数为viewposition视角位置
-*/
-//行星模型初始化
+	*Sun类使用：		 构造时传入缩放系数
+	使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
+	成员函数SetMatrix传入viewposition视角位置
+	渲染使用RenderSun函数
+
+	*Satellite类使用：	 构造时传入参数顺序为（环绕行星对象，缩放，轨道半径，公转速度）
+	使用RendShaderAndModel函数参数顺序（顶点着色器文件，片元着色器文件，星球模型文件（assimp可加载类型））
+	如果只有一个卫星，请使用成员函数SetMatrix，参数为viewposition
+	如果有多个卫星（卫星群），请使用SatelliteGroupInit进行初始化
+	渲染使用SetMatrixAndRender，参数为viewposition视角位置
+	*/
+	//行星模型初始化
 	Sun sun(13.0f);
-	sun.ReadShaderAndModel("SolarAndPlanet/Shader/SunShader.vt","SolarAndPlanet/Shader/SunShader.fg","SolarAndPlanet/Sun/Sun.obj");
-	
+	sun.ReadShaderAndModel("SolarAndPlanet/Shader/SunShader.vt", "SolarAndPlanet/Shader/SunShader.fg", "SolarAndPlanet/Sun/Sun.obj");
 
-	Planet Jupiter(4.0f, 100.0f,0.3f);
+	Planet Jupiter(4.0f, 100.0f, 0.0f);
 	Jupiter.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
 		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/Jupiter/Jupiter.obj");
-	
-	
-	Satellite SatelliteGroup(Jupiter, 1.0f, 50.0f, 0.5f);
-	SatelliteGroup.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
+
+
+	Satellite SatelliteGroup(Jupiter, 1.0f, 30.0f, 1.0f);
+	SatelliteGroup.ReadShaderAndModel("SolarAndPlanet/Shader/SatelliteShader.vt",
 		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
 		"SolarAndPlanet/rock.obj");
 	SatelliteGroup.SatelliteGroupInit(100);
-/*
+	/*
 	Satellite Moon(Jupiter, 0.5f, 20.0f, 1.5f);
 	Moon.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Earth/Moon.obj"); 
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Earth/Moon.obj");
 
 	Planet Mercury(1.0f, 70.0f,0.0f);
 	Mercury.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Mercury/Mercury.obj");
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Mercury/Mercury.obj");
 
 	Planet Venus(1.5f, 80.0f,0.0f);
 	Venus.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Venus/Venus.obj");
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Venus/Venus.obj");
 
 	Planet Earth(1.0f,100.0f,0.0f);
 	Earth.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Earth/Earth.obj");
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Earth/Earth.obj");
 
-	
+
 
 	Planet Mars(1.0f, 0.0f);
 	Mars.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Mars/Mars.obj");
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Mars/Mars.obj");
 
-	
+
 
 	Planet Neptune(1.0f, 0.0f);
 	Neptune.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Neptune/Neptune.obj");
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Neptune/Neptune.obj");
 
 	Planet Uranus(1.0f, 0.0f);
 	Uranus.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Uranus/Uranus.obj");
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Uranus/Uranus.obj");
 
 	Planet Saturn(1.0f, 0.0f);
 	Saturn.ReadShaderAndModel("SolarAndPlanet/Shader/PlanetShader.vt",
-		"SolarAndPlanet/Shader/PlanetBeanShader.fg",
-		"SolarAndPlanet/Saturn/Saturn.obj");
-*/
+	"SolarAndPlanet/Shader/PlanetBeanShader.fg",
+	"SolarAndPlanet/Saturn/Saturn.obj");
+	*/
+
+	GLuint frameBuffer;
+	glGenFramebuffers(1,&frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	GLuint textureColorBuffer = generateAttachmentTexture(false,false);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
+
+	GLuint rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER ,GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "ERROR::FRAMEBUFFER::framebuffer is not complete!" << endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	while (!glfwWindowShouldClose(window)) {
 		GLfloat currentFrame = glfwGetTime();
@@ -274,10 +340,11 @@ int main() {
 
 		glfwPollEvents();
 		cameraMove();
-		GLfloat angle = 0.0f;
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+
 		glm::mat4 BoxView, projection;
 		BoxView = SolarSystemCamera.GetViewMatrix();
 		projection = glm::perspective(SolarSystemCamera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 1000.0f);
@@ -290,13 +357,19 @@ int main() {
 
 		glBindVertexArray(UbVAO);
 		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(glGetUniformLocation(UniverseBoxShader.Program, "UniverseBoxTexture"),0);
+		glUniform1i(glGetUniformLocation(UniverseBoxShader.Program, "UniverseBoxTexture"), 0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, UniverseBoxTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);
 
-		sun.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection,glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		frameBufferShader.Use();
+		glBindVertexArray(frameVAO);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+
+		sun.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		sun.RenderSun();
 		//Sun.RenderOrbit();
 
@@ -304,11 +377,11 @@ int main() {
 		Jupiter.RenderPlanet();
 
 		SatelliteGroup.SetMatrixAndRender(glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
-/*
+		/*
 
 		Moon.SetMatrix(glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Moon.RenderSatellite();
-		
+
 		Mercury.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Mercury.RenderPlanet();
 
@@ -318,7 +391,7 @@ int main() {
 		Earth.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Earth.RenderPlanet();
 
-		
+
 
 		Mars.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Mars.RenderPlanet();
@@ -331,7 +404,41 @@ int main() {
 
 		Saturn.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
 		Saturn.RenderPlanet();
-*/
+		*/
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+
+		//glm::mat4 BoxView, projection;
+		BoxView = SolarSystemCamera.GetViewMatrix();
+		projection = glm::perspective(SolarSystemCamera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 1000.0f);
+
+		glDepthFunc(GL_LEQUAL);
+		UniverseBoxShader.Use();
+		BoxView = glm::mat4(glm::mat3(SolarSystemCamera.GetViewMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(UniverseBoxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(BoxView));
+		glUniformMatrix4fv(glGetUniformLocation(UniverseBoxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		glBindVertexArray(UbVAO);
+		glActiveTexture(GL_TEXTURE0);
+		glUniform1i(glGetUniformLocation(UniverseBoxShader.Program, "UniverseBoxTexture"), 0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, UniverseBoxTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		glDepthFunc(GL_LESS);
+
+		sun.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		sun.RenderSun();
+		//Sun.RenderOrbit();
+
+		Jupiter.SetMatrix(SolarSystemCamera.GetViewMatrix(), projection, glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+		Jupiter.RenderPlanet();
+
+		SatelliteGroup.SetMatrixAndRender(glm::vec3(SolarSystemCamera.Position.x, SolarSystemCamera.Position.y, SolarSystemCamera.Position.z));
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 		glfwSwapBuffers(window);
 	}

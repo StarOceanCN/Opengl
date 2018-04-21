@@ -1,5 +1,4 @@
-
-
+#pragma once
 #include<iostream>
 #include<string>
 #include<vector>
@@ -23,18 +22,17 @@ using namespace Assimp;
 
 class Model {
 public:
+	vector<Mesh> meshes;
+	vector<Texture> textures_loaded;
 	Model(string path);
-	void ModelRender(Shader s,GLfloat shininess) {
+	void ModelRender(Shader s, GLfloat shininess) {
 		for (GLuint i = 0; i < this->meshes.size(); i++) {
-			this->meshes[i].render(s,shininess);
+			this->meshes[i].render(s, shininess);
 		}
 	};
 	~Model();
 private:
-	vector<Mesh> meshes;
 	string directory;
-	vector<Texture> textures_loaded;
-
 	void processNode(aiNode* node, const aiScene* scene) {
 		for (GLuint i = 0; i < node->mNumMeshes; i++)this->meshes.push_back(this->TransferMesh(scene->mMeshes[node->mMeshes[i]], scene));
 		for (GLuint i = 0; i < node->mNumChildren; i++)processNode(node->mChildren[i], scene);
@@ -78,13 +76,13 @@ private:
 					break;
 				}
 			}
-			if (!skip) { 
+			if (!skip) {
 				Texture texture;
 				texture.Texid = TextureFromFile(aistr.C_Str(), this->directory);
 				texture.Textype = texname;
 				texture.path = aistr;
 				textures.push_back(texture);
-				this->textures_loaded.push_back(texture); 
+				this->textures_loaded.push_back(texture);
 			}
 		}
 		return textures;

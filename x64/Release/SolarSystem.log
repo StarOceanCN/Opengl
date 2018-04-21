@@ -1,0 +1,80 @@
+﻿  SolarSystem.cpp
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Mesh.h(55): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(206): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(217): warning C4244: “=”: 从“int”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(244): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(248): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(250): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(266): warning C4312: “类型转换”: 从“GLsizei”转换到更大的“GLvoid *”
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(268): warning C4312: “类型转换”: 从“GLsizei”转换到更大的“GLvoid *”
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(270): warning C4312: “类型转换”: 从“GLsizei”转换到更大的“GLvoid *”
+c:\users\mr.d\documents\visual studio 2015\projects\solarsystem\solarsystem\Planet.h(289): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+SolarSystem.cpp(44): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+SolarSystem.cpp(45): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+SolarSystem.cpp(272): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwSwapBuffers
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewEnableVertexAttribArray
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewBindVertexArray
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewUseProgram
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glViewport
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewVertexAttribPointer
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glClear
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGetShaderiv
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewCompileShader
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 aiGetMaterialTextureCount
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewCreateShader
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewBindBuffer
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwGetTime
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewCreateProgram
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glBindTexture
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glGenTextures
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewUniform1i
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glEnable
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGetShaderInfoLog
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewBufferSubData
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGetProgramiv
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwTerminate
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewVertexAttribDivisor
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 SOIL_free_image_data
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwPollEvents
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwInit
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 SOIL_load_image
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewDeleteVertexArrays
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwSetKeyCallback
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwSetWindowShouldClose
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewUniform1f
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwCreateWindow
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwWindowHint
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGetUniformLocation
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwSetInputMode
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwMakeContextCurrent
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewBufferData
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glTexParameteri
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewAttachShader
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewActiveTexture
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewShaderSource
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewDrawElementsInstanced
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGenVertexArrays
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glClearColor
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glDrawArrays
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewUniformMatrix4fv
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 "public: char const * __cdecl Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QEBAPEBDXZ)
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@PEBDI@Z)
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 "public: __cdecl Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QEAA@XZ)
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 "public: __cdecl Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QEAA@XZ)
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glTexImage2D
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 aiGetMaterialTexture
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glewExperimental
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwSetCursorPosCallback
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGetProgramInfoLog
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glDrawElements
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGenBuffers
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewGenerateMipmap
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewUniform3f
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewDeleteShader
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __imp_glDepthFunc
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewLinkProgram
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glfwWindowShouldClose
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 glewInit
+SolarSystem.obj : error LNK2001: 无法解析的外部符号 __glewDeleteBuffers
+c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\x64\Release\SolarSystem.exe : fatal error LNK1120: 65 个无法解析的外部命令

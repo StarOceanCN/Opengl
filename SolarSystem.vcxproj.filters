@@ -15,13 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Planet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="SolarSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Planet.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

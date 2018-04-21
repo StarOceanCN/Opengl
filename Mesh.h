@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 //C++
 #include<string>
 #include<iostream>
@@ -30,13 +31,14 @@ public:
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
+	GLuint VAO;
 	Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures) {
 		this->vertices = vertices;
 		this->indices = indices;
 		this->textures = textures;
 		this->InitBuffer();
 	};
-	void render(Shader s,GLfloat shininess) {
+	void render(Shader s, GLfloat shininess) {
 		GLuint texturedn = 1;
 		GLuint texturesn = 1;
 		for (GLuint i = 0; i < this->textures.size(); i++) {
@@ -58,10 +60,32 @@ public:
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 	};
+	void instanceRender(Shader s, GLfloat shininess,GLuint Num) {
+		GLuint texturedn = 1;
+		GLuint texturesn = 1;
+		for (GLuint i = 0; i < this->textures.size(); i++) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			stringstream ss;
+			if (this->textures[i].Textype == "texture_diffuse")ss << texturedn++;
+			else if (this->textures[i].Textype == "texture_specular")ss << texturesn++;
+			glUniform1i(glGetUniformLocation(s.Program, (this->textures[i].Textype + ss.str()).c_str()), i);
+			glBindTexture(GL_TEXTURE_2D, this->textures[i].Texid);
+		}
+		glUniform1f(glGetUniformLocation(s.Program, "material.shininess"), shininess);
+
+		glBindVertexArray(this->VAO);
+		glDrawElementsInstanced(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0,Num);
+		glBindVertexArray(0);
+
+		for (GLuint i = 0; i < this->textures.size(); i++) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+	};
 	~Mesh() {};
 
 private:
-	GLuint VAO, VBO, EBO;
+	GLuint VBO, EBO;
 	void InitBuffer() {
 		//get
 		glGenVertexArrays(1, &this->VAO);

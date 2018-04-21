@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1ADBC00F-464A-4C6A-A9C9-8FA973CAAD65}</ProjectGuid>
+    <ProjectGuid>{7F281F49-27EA-449D-B4C9-EC0F6714A6D0}</ProjectGuid>
     <RootNamespace>SolarSystem</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -100,6 +100,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glfw3dll.lib;glew32s.lib;SOIL.lib;OpenGL32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -113,13 +114,18 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glfw3dll.lib;glew32s.lib;SOIL.lib;OpenGL32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SolarSystem.cpp" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Planet.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Planet.h" />
+    <ClCompile Include="SolarSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

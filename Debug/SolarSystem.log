@@ -1,12 +1,8 @@
-﻿  SolarSystem.cpp
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(205): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(216): warning C4244: “=”: 从“int”转换到“GLfloat”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(233): warning C4018: “<”: 有符号/无符号不匹配
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(237): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(239): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(43): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(44): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(254): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
-c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\model.h(67): warning C4715: “Model::TransferMesh”: 不是所有的控件路径都返回值
-  SolarSystem.vcxproj -> C:\Users\Mr.D\Documents\Visual Studio 2015\Projects\opengl\Debug\SolarSystem.exe
-  SolarSystem.vcxproj -> C:\Users\Mr.D\Documents\Visual Studio 2015\Projects\opengl\Debug\SolarSystem.pdb (Partial PDB)
+﻿LINK : warning LNK4098: 默认库“LIBCMT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: 未找到 PDB“vc120.pdb”(使用“glew32s.lib(glew.obj)”或在“c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\vc120.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+SOIL.lib(image_DXT.obj) : warning LNK4099: 未找到 PDB“SOIL.pdb”(使用“SOIL.lib(image_DXT.obj)”或在“c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\SOIL.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+SOIL.lib(image_helper.obj) : warning LNK4099: 未找到 PDB“SOIL.pdb”(使用“SOIL.lib(image_helper.obj)”或在“c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\SOIL.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+SOIL.lib(SOIL.obj) : warning LNK4099: 未找到 PDB“SOIL.pdb”(使用“SOIL.lib(SOIL.obj)”或在“c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\SOIL.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: 未找到 PDB“SOIL.pdb”(使用“SOIL.lib(stb_image_aug.obj)”或在“c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\SOIL.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+  SolarSystem.vcxproj -> c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\SolarSystem.exe
+  SolarSystem.vcxproj -> c:\users\mr.d\documents\visual studio 2015\Projects\SolarSystem\Debug\SolarSystem.pdb (Partial PDB)

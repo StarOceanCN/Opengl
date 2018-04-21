@@ -1,0 +1,16 @@
+﻿  SolarSystem.cpp
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\mesh.h(54): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(205): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(216): warning C4244: “=”: 从“int”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(243): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(247): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(249): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(265): warning C4312: “类型转换”: 从“GLsizei”转换到更大的“GLvoid *”
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(267): warning C4312: “类型转换”: 从“GLsizei”转换到更大的“GLvoid *”
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(269): warning C4312: “类型转换”: 从“GLsizei”转换到更大的“GLvoid *”
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\planet.h(288): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(44): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(45): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\solarsystem.cpp(272): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
+c:\users\mr.d\documents\visual studio 2015\projects\opengl\solarsystem\model.h(65): warning C4715: “Model::TransferMesh”: 不是所有的控件路径都返回值
+LINK : fatal error LNK1104: 无法打开文件“glfw3dll.lib”
